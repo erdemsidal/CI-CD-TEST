@@ -4,7 +4,7 @@ function topla(a, b) {
 }
 
 // Test 1
-if (topla(2, 3) !== 99) {
+if (topla(2, 3) !== 5) {
   console.error("❌ Test 1 başarısız: 2 + 3 = 5 olmalı");
   process.exit(1);
 }
