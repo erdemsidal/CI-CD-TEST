@@ -1,0 +1,8 @@
+{
+  "name": "ci-cd-pratik",
+  "version": "1.0.0",
+  "description": "CI/CD pratiği",
+  "scripts": {
+    "test": "node test.js"
+  }
+}
