@@ -1,13 +1,14 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
+  
+  # 1. JOB: TEST
   test:
+    name: 🧪 Kod Testi
     runs-on: ubuntu-latest
     
     steps:
@@ -21,6 +22,58 @@ jobs:
       
       - name: Testleri çalıştır
         run: npm test
+  
+  # 2. JOB: BUILD
+  build:
+    name: 📦 Paketleme
+    needs: test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Kodu çek
+        uses: actions/checkout@v3
       
-      - name: Başarılı mesajı
-        run: echo "🎉 Pipeline tamamlandı!"
+      - name: Build simülasyonu
+        run: |
+          echo "📦 Paketleme başlıyor..."
+          mkdir -p dist
+          cp test.js dist/
+          cp package.json dist/
+          echo "✅ Paketleme tamamlandı!"
+          ls -la dist/
+      
+      - name: Build artifact yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-package
+          path: dist/
+  
+  # 3. JOB: DEPLOY
+  deploy:
+    name: 🚀 Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Build artifact indir
+        uses: actions/download-artifact@v4
+        with:
+          name: app-package
+          path: downloaded/
+      
+      - name: Deploy simülasyonu
+        run: |
+          echo "🚀 Deploy başlıyor..."
+          echo "📂 İndirilen paket:"
+          ls -la downloaded/
+          echo ""
+          echo "🌐 Sunucuya gönderiliyor... (simülasyon)"
+          sleep 3
+          echo ""
+          echo "✅ Deploy başarılı!"
+          echo "🎉 Uygulama canlıda: https://example.com"
+      
+      - name: Slack bildirim (simülasyon)
+        run: |
+          echo "💬 Slack'e mesaj gönderildi:"
+          echo "   Yeni sürüm canlıda! 🎉"
